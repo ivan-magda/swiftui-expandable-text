@@ -55,18 +55,7 @@ public struct ExpandableText: View {
             )
             .overlayCompatibility(alignment: .trailingLastTextBaseline) {
                 if shouldShowMoreButton {
-                    Button(
-                        action: {
-                            withAnimation(expandAnimation) {
-                                isExpanded.toggle()
-                            }
-                        },
-                        label: {
-                            Text(moreButtonText)
-                                .font(moreButtonFont ?? font)
-                                .foregroundColor(moreButtonColor)
-                        }
-                    )
+                    moreButton
                 }
             }
     }
@@ -80,5 +69,22 @@ public struct ExpandableText: View {
         .font(font)
         .foregroundColor(color)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var moreButton: some View {
+        Button(
+            action: {
+                withAnimation(expandAnimation) {
+                    isExpanded.toggle()
+                }
+            },
+            label: {
+                Text(moreButtonText)
+                    .font(moreButtonFont ?? font)
+                    .foregroundColor(moreButtonColor)
+            }
+        )
+        .accessibilityLabel("Show more text")
+        .accessibilityHint("Expands the text to show its full content")
     }
 }
