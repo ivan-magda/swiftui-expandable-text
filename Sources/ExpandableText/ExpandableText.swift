@@ -49,6 +49,10 @@ public struct ExpandableText: View {
                     .hidden()
                     .readSize { moreTextSize = $0 }
             )
+            .contentShape(Rectangle())
+            .onTapGesture {
+                print("ExpandableText :: tapped")
+            }
             .overlayCompatibility(alignment: .trailingLastTextBaseline) {
                 if shouldShowMoreButton {
                     moreButton
