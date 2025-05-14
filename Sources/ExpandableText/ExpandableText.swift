@@ -2,8 +2,8 @@ import Foundation
 import SwiftUI
 
 public struct ExpandableText: View {
-    @State private var isExpanded: Bool = false
-    @State private var isTruncated: Bool = false
+    @State private(set) var isExpanded: Bool = false
+    @State private(set) var isTruncated: Bool = false
 
     @State private var intrinsicSize: CGSize = .zero
     @State private var truncatedSize: CGSize = .zero
