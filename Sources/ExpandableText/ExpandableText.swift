@@ -21,10 +21,6 @@ public struct ExpandableText: View {
 
     private var shouldShowMoreButton: Bool { !isExpanded && isTruncated }
 
-    private var textTrimmingDoubleNewlines: String {
-        text.replacingOccurrences(of: #"\n\s*\n"#, with: "\n", options: .regularExpression)
-    }
-
     public init(_ text: String) {
         self.text = text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -86,5 +82,21 @@ public struct ExpandableText: View {
         )
         .accessibilityLabel("Show more text")
         .accessibilityHint("Expands the text to show its full content")
+    }
+}
+
+// MARK: Trimming newlines
+
+extension ExpandableText {
+    // swiftlint:disable:next force_try
+    private static let newlinesRegex = try! NSRegularExpression(pattern: #"\n\s*\n"#)
+
+    private var textTrimmingDoubleNewlines: String {
+        let range = NSRange(text.startIndex..<text.endIndex, in: text)
+        return Self.newlinesRegex.stringByReplacingMatches(
+            in: text,
+            range: range,
+            withTemplate: "\n"
+        )
     }
 }
