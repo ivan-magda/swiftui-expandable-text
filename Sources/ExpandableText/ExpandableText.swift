@@ -49,10 +49,7 @@ public struct ExpandableText: View {
                     .hidden()
                     .readSize { moreTextSize = $0 }
             )
-            .contentShape(Rectangle())
-            .onTapGesture {
-                print("ExpandableText :: tapped")
-            }
+            .allowsHitTesting(false)
             .overlayCompatibility(alignment: .trailingLastTextBaseline) {
                 if shouldShowMoreButton {
                     moreButton
@@ -85,6 +82,7 @@ public struct ExpandableText: View {
                     .foregroundColor(moreButtonColor)
             }
         )
+        .background(Color.red)
         .contentShape(Rectangle())
         .accessibilityLabel("Show more text")
         .accessibilityHint("Expands the text to show its full content")
@@ -106,3 +104,22 @@ extension ExpandableText {
         )
     }
 }
+
+#if DEBUG
+let loremIpsum = """
+Lorem ipsum dolor sit amet, consectetur adipiscing
+elit, sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip
+ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur.
+"""
+
+#Preview {
+    ExpandableText(
+        loremIpsum
+    )
+    .padding()
+}
+#endif
