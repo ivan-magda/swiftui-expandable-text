@@ -71,7 +71,6 @@ public struct ExpandableText: View {
     private var moreButton: some View {
         Button(
             action: {
-                print("ExpandableText :: moreButton tapped")
                 withAnimation(expandAnimation) {
                     isExpanded.toggle()
                 }
@@ -82,7 +81,6 @@ public struct ExpandableText: View {
                     .foregroundColor(moreButtonColor)
             }
         )
-        .background(Color.red)
         .contentShape(Rectangle())
         .accessibilityLabel("Show more text")
         .accessibilityHint("Expands the text to show its full content")
