@@ -69,6 +69,18 @@ public extension ExpandableText {
     }
 
     /**
+     Sets the foreground style to use for the "show more" button in the `ExpandableText` instance.
+     - Parameter style: The shape style to apply to the button label.
+     - Returns: A new `ExpandableText` instance with the specified foreground style applied.
+     */
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    func moreButtonForegroundStyle<S: ShapeStyle>(_ style: S) -> Self {
+        var copy = self
+        copy.moreButtonForegroundStyle = AnyShapeStyle(style)
+        return copy
+    }
+
+    /**
      Sets the animation to use when expanding the `ExpandableText` instance.
      - Parameter animation: The animation to use for the expansion. Defaults to `default`
      - Returns: A new `ExpandableText` instance with the specified expansion animation applied.
