@@ -19,3 +19,12 @@ import SwiftUI
     #expect(sut.color == .red)
     #expect(sut.moreButtonText == "Show More")
 }
+
+@Test @MainActor func testMoreButtonForegroundStyle() {
+    if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *) {
+        let sut = ExpandableText("Test")
+            .moreButtonForegroundStyle(.tint)
+
+        #expect(sut.moreButtonForegroundStyle != nil)
+    }
+}

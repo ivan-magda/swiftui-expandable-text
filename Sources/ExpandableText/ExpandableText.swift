@@ -16,6 +16,7 @@ public struct ExpandableText: View {
     internal var moreButtonText: String = "more"
     internal var moreButtonFont: Font?
     internal var moreButtonColor: Color = .accentColor
+    internal var moreButtonForegroundStyle: Any?
     internal var expandAnimation: Animation = .default
     internal var trimMultipleNewlinesWhenTruncated: Bool = true
 
@@ -75,15 +76,26 @@ public struct ExpandableText: View {
                     isExpanded.toggle()
                 }
             },
-            label: {
-                Text(moreButtonText)
-                    .font(moreButtonFont ?? font)
-                    .foregroundColor(moreButtonColor)
-            }
+            label: { moreButtonLabel }
         )
         .contentShape(Rectangle())
         .accessibilityLabel("Show more text")
         .accessibilityHint("Expands the text to show its full content")
+    }
+
+    @ViewBuilder
+    private var moreButtonLabel: some View {
+        let text = Text(moreButtonText)
+            .font(moreButtonFont ?? font)
+
+        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *),
+           let foregroundStyle = moreButtonForegroundStyle as? AnyShapeStyle {
+            text
+                .foregroundStyle(foregroundStyle)
+        } else {
+            text
+                .foregroundColor(moreButtonColor)
+        }
     }
 }
 
@@ -114,9 +126,24 @@ reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur.
 """
 
-#Preview {
+#Preview("Default") {
     ExpandableText(
         loremIpsum
+    )
+    .padding()
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+#Preview("Foreground Style") {
+    ExpandableText(
+        loremIpsum
+    )
+    .moreButtonForegroundStyle(
+        .linearGradient(
+            colors: [.red, .blue],
+            startPoint: .top,
+            endPoint: .bottom
+        )
     )
     .padding()
 }
