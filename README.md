@@ -81,6 +81,7 @@ ExpandableText(longText)
 | `moreButtonText(_:)` | Text for the "show more" button | `"more"` |
 | `moreButtonFont(_:)` | Font for the "show more" button | Same as text font |
 | `moreButtonColor(_:)` | Color for the "show more" button | `.accentColor` |
+| `moreButtonForegroundStyle(_:)` | Shape style for the "show more" button (iOS 15+/macOS 12+) | Falls back to `moreButtonColor` when unset |
 | `expandAnimation(_:)` | Animation used when expanding/collapsing | `.default` |
 | `trimMultipleNewlinesWhenTruncated(_:)` | Whether to trim consecutive newlines when truncated | `true` |
 
