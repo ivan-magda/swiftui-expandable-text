@@ -9,7 +9,7 @@
 A customizable SwiftUI component for displaying expandable text with "Show More" functionality and markdown support.
 
 <p align="center">
-  <img src="demo/expandable-text-demo.gif" width="280" alt="ExpandableText Demo">&nbsp;&nbsp;&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="280" alt="Customization Demo">
+  <img src="demo/expandable-text-demo.gif" width="240" alt="ExpandableText Demo">&nbsp;&nbsp;<img src="demo/markdown-demo.gif" width="240" alt="Markdown Demo">&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="240" alt="Customization Demo">
 </p>
 
 ## Features
