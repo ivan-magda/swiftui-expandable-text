@@ -1,4 +1,3 @@
-import Foundation
 import SwiftUI
 
 public extension ExpandableText {
@@ -58,22 +57,10 @@ public extension ExpandableText {
     }
 
     /**
-     Sets the color to use for the "show more" button in the `ExpandableText` instance.
-     - Parameter color: The color to use for the "show more" button. Defaults to `accentColor`
-     - Returns: A new `ExpandableText` instance with the specified "show more" button color applied.
-     */
-    func moreButtonColor(_ color: Color) -> Self {
-        var copy = self
-        copy.moreButtonColor = color
-        return copy
-    }
-
-    /**
      Sets the foreground style to use for the "show more" button in the `ExpandableText` instance.
      - Parameter style: The shape style to apply to the button label.
      - Returns: A new `ExpandableText` instance with the specified foreground style applied.
      */
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     func moreButtonForegroundStyle<S: ShapeStyle>(_ style: S) -> Self {
         var copy = self
         copy.moreButtonForegroundStyle = AnyShapeStyle(style)
@@ -88,17 +75,6 @@ public extension ExpandableText {
     func expandAnimation(_ animation: Animation) -> Self {
         var copy = self
         copy.expandAnimation = animation
-        return copy
-    }
-
-    /**
-     Sets whether multiple consecutive newline characters should be trimmed when truncating the text in the `ExpandableText` instance.
-     - Parameter value: A boolean value indicating whether to trim multiple consecutive newline characters. Defaults to `true`
-     - Returns: A new `ExpandableText` instance with the specified trimming behavior applied.
-     */
-    func trimMultipleNewlinesWhenTruncated(_ value: Bool) -> Self {
-        var copy = self
-        copy.trimMultipleNewlinesWhenTruncated = value
         return copy
     }
 }

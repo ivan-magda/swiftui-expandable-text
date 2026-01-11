@@ -1,4 +1,3 @@
-import Foundation
 import SwiftUI
 
 public struct ExpandableText: View {
@@ -9,21 +8,36 @@ public struct ExpandableText: View {
     @State private var truncatedSize: CGSize = .zero
     @State private var moreTextSize: CGSize = .zero
 
-    private let text: String
+    private let makeText: () -> Text
     internal var font: Font = .body
     internal var color: Color = .primary
     internal var lineLimit: Int = 3
     internal var moreButtonText: String = "more"
     internal var moreButtonFont: Font?
-    internal var moreButtonColor: Color = .accentColor
-    internal var moreButtonForegroundStyle: Any?
+    internal var moreButtonForegroundStyle: AnyShapeStyle = AnyShapeStyle(Color.accentColor)
     internal var expandAnimation: Animation = .default
-    internal var trimMultipleNewlinesWhenTruncated: Bool = true
 
     private var shouldShowMoreButton: Bool { !isExpanded && isTruncated }
 
-    public init(_ text: String) {
-        self.text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    /// Creates expandable text with markdown support.
+    ///
+    /// Use this initializer with string literals to render markdown formatting
+    /// like **bold**, *italic*, `code`, ~~strikethrough~~, and [links](url).
+    ///
+    /// - Parameter key: A localized string key that may contain markdown.
+    public init(_ key: LocalizedStringKey) {
+        self.makeText = { Text(key) }
+    }
+
+    /// Creates expandable text with a raw string (no markdown parsing).
+    ///
+    /// Use this initializer when you have a `String` variable or when you want
+    /// to display text without markdown parsing.
+    ///
+    /// - Parameter content: The string to display verbatim.
+    public init(verbatim content: String) {
+        let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.makeText = { Text(verbatim: trimmed) }
     }
 
     public var body: some View {
@@ -51,7 +65,7 @@ public struct ExpandableText: View {
                     .readSize { moreTextSize = $0 }
             )
             .allowsHitTesting(false)
-            .overlayCompatibility(alignment: .trailingLastTextBaseline) {
+            .overlay(alignment: .trailingLastTextBaseline) {
                 if shouldShowMoreButton {
                     moreButton
                 }
@@ -59,14 +73,10 @@ public struct ExpandableText: View {
     }
 
     private var content: some View {
-        Text(
-            trimMultipleNewlinesWhenTruncated
-            ? (shouldShowMoreButton ? textTrimmingDoubleNewlines : text)
-            : text
-        )
-        .font(font)
-        .foregroundColor(color)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        makeText()
+            .font(font)
+            .foregroundColor(color)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var moreButton: some View {
@@ -83,82 +93,60 @@ public struct ExpandableText: View {
         .accessibilityHint("Expands the text to show its full content")
     }
 
-    @ViewBuilder
     private var moreButtonLabel: some View {
-        let text = Text(moreButtonText)
+        Text(moreButtonText)
             .font(moreButtonFont ?? font)
-
-        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *),
-           let foregroundStyle = moreButtonForegroundStyle as? AnyShapeStyle {
-            text
-                .foregroundStyle(foregroundStyle)
-        } else {
-            text
-                .foregroundColor(moreButtonColor)
-        }
-    }
-}
-
-// MARK: Trimming newlines
-
-extension ExpandableText {
-    // swiftlint:disable:next force_try
-    private static let newlinesRegex = try! NSRegularExpression(pattern: #"\n\s*\n"#)
-
-    private var textTrimmingDoubleNewlines: String {
-        let range = NSRange(text.startIndex..<text.endIndex, in: text)
-        return Self.newlinesRegex.stringByReplacingMatches(
-            in: text,
-            range: range,
-            withTemplate: "\n"
-        )
+            .foregroundStyle(moreButtonForegroundStyle)
     }
 }
 
 #if DEBUG
 let loremIpsum = """
-Lorem ipsum dolor sit amet, consectetur adipiscing
-elit, sed do eiusmod tempor incididunt ut labore et
-dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip
-ex ea commodo consequat. Duis aute irure dolor in
-reprehenderit in voluptate velit esse cillum dolore
+Lorem ipsum dolor sit amet, consectetur adipiscing \
+elit, sed do eiusmod tempor incididunt ut labore et \
+dolore magna aliqua. Ut enim ad minim veniam, quis \
+nostrud exercitation ullamco laboris nisi ut aliquip \
+ex ea commodo consequat. Duis aute irure dolor in \
+reprehenderit in voluptate velit esse cillum dolore \
 eu fugiat nulla pariatur.
 """
 
 #Preview("Default") {
-    ExpandableText(
-        loremIpsum
-    )
+    ExpandableText(verbatim: loremIpsum)
+        .padding()
+}
+
+#Preview("Markdown") {
+    ExpandableText("""
+        This is **bold**, *italic*, and ~~strikethrough~~ text. \
+        Visit [Apple](https://apple.com) for more. \
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, \
+        sed do eiusmod tempor incididunt ut labore.
+        """)
     .padding()
 }
 
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 #Preview("Foreground Style") {
-    ExpandableText(
-        loremIpsum
-    )
-    .moreButtonForegroundStyle(
-        .linearGradient(
-            colors: [.red, .blue],
-            startPoint: .top,
-            endPoint: .bottom
+    ExpandableText(verbatim: loremIpsum)
+        .moreButtonForegroundStyle(
+            .linearGradient(
+                colors: [.red, .blue],
+                startPoint: .top,
+                endPoint: .bottom
+            )
         )
-    )
-    .padding()
+        .padding()
 }
 
 #Preview("Customization") {
-    ExpandableText(
-        loremIpsum
-    )
-    .font(.body)
-    .foregroundColor(.primary)
-    .lineLimit(3)
-    .moreButtonText("Show more")
-    .moreButtonFont(.caption.bold())
-    .moreButtonColor(.blue)
-    .expandAnimation(.easeOut)
-    .padding()
+    ExpandableText(verbatim: loremIpsum)
+        .font(.body)
+        .foregroundColor(.primary)
+        .lineLimit(3)
+        .moreButtonText("Show more")
+        .moreButtonFont(.caption.bold())
+        .moreButtonForegroundStyle(.blue)
+        .expandAnimation(.easeOut)
+        .padding()
 }
 #endif

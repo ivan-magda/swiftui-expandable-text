@@ -67,3 +67,6 @@ fastlane/test_output
 # Demo - ignore everything except GIFs
 demo/*
 !demo/*.gif
+
+# Plans
+docs/plans/

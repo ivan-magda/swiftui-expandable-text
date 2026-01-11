@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com/swift)
 
-A customizable SwiftUI component for displaying expandable text with "Show More" functionality.
+A customizable SwiftUI component for displaying expandable text with "Show More" functionality and markdown support.
 
 <p align="center">
   <img src="demo/expandable-text-demo.gif" width="280" alt="ExpandableText Demo">&nbsp;&nbsp;&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="280" alt="Customization Demo">
@@ -14,9 +14,10 @@ A customizable SwiftUI component for displaying expandable text with "Show More"
 
 ## Features
 
+- Markdown rendering support (**bold**, *italic*, ~~strikethrough~~, `code`, [links](url))
 - Expand text with customizable animation
 - Automatically detects text truncation
-- Customizable "more" button text, color, and font
+- Customizable "more" button text, style, and font
 - Supports various text styling options
 - Works across iOS, macOS, tvOS, and watchOS
 - Smooth gradient truncation effect
@@ -24,7 +25,7 @@ A customizable SwiftUI component for displaying expandable text with "Show More"
 
 ## Requirements
 
-- iOS 14.0+ / macOS 11.0+ / tvOS 13.0+ / watchOS 7.0+
+- iOS 15.0+ / macOS 12.0+ / tvOS 15.0+ / watchOS 8.0+
 - Swift 6.0+
 - Xcode 16.2+
 
@@ -36,7 +37,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ivan-magda/swiftui-expandable-text.git", from: "1.0.0")
+    .package(url: "https://github.com/ivan-magda/swiftui-expandable-text.git", from: "2.0.0")
 ]
 ```
 
@@ -55,10 +56,25 @@ import ExpandableText
 
 struct ContentView: View {
     var body: some View {
-        ExpandableText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam nisl nunc vitae nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, vitae aliquam nisl nunc vitae nisl.")
+        ExpandableText("Lorem ipsum dolor sit amet, consectetur adipiscing elit...")
             .padding()
     }
 }
+```
+
+### Markdown Support
+
+String literals automatically render markdown:
+
+```swift
+ExpandableText("This is **bold**, *italic*, and ~~strikethrough~~ text. Visit [Apple](https://apple.com) for more.")
+```
+
+For string variables or to disable markdown parsing, use `verbatim:`:
+
+```swift
+let text = fetchedContent // String variable
+ExpandableText(verbatim: text)
 ```
 
 ### Customization
@@ -70,9 +86,8 @@ ExpandableText(longText)
     .lineLimit(3)
     .moreButtonText("Show more")
     .moreButtonFont(.caption.bold())
-    .moreButtonColor(.blue)
+    .moreButtonForegroundStyle(.blue)
     .expandAnimation(.easeOut)
-    .trimMultipleNewlinesWhenTruncated(true)
 ```
 
 ## Available Modifiers
@@ -84,10 +99,8 @@ ExpandableText(longText)
 | `lineLimit(_:)` | Sets maximum number of lines when collapsed | `3` |
 | `moreButtonText(_:)` | Text for the "show more" button | `"more"` |
 | `moreButtonFont(_:)` | Font for the "show more" button | Same as text font |
-| `moreButtonColor(_:)` | Color for the "show more" button | `.accentColor` |
-| `moreButtonForegroundStyle(_:)` | Shape style for the "show more" button (iOS 15+/macOS 12+) | Falls back to `moreButtonColor` when unset |
+| `moreButtonForegroundStyle(_:)` | Shape style for the "show more" button | `.accentColor` |
 | `expandAnimation(_:)` | Animation used when expanding/collapsing | `.default` |
-| `trimMultipleNewlinesWhenTruncated(_:)` | Whether to trim consecutive newlines when truncated | `true` |
 
 ## How It Works
 
@@ -104,26 +117,26 @@ The `ExpandableText` component works by:
 ```swift
 struct BlogPostView: View {
     let post: BlogPost
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(post.title)
                 .font(.title)
                 .bold()
-            
+
             Text("Posted by \(post.author) • \(post.dateFormatted)")
                 .font(.caption)
                 .foregroundColor(.secondary)
-            
-            ExpandableText(post.content)
+
+            ExpandableText(verbatim: post.content)
                 .font(.body)
                 .foregroundColor(.primary)
                 .lineLimit(4)
                 .moreButtonText("Read more")
                 .moreButtonFont(.caption.bold())
-                .moreButtonColor(.blue)
+                .moreButtonForegroundStyle(.blue)
                 .padding(.vertical, 4)
-            
+
             Divider()
         }
         .padding()
