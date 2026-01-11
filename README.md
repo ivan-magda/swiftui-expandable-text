@@ -9,7 +9,7 @@
 A customizable SwiftUI component for displaying expandable text with "Show More" functionality.
 
 <p align="center">
-  <img src="demo/expandable-text-demo.gif" width="300" alt="ExpandableText Demo">
+  <img src="demo/expandable-text-demo.gif" width="280" alt="ExpandableText Demo">&nbsp;&nbsp;&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="280" alt="Customization Demo">
 </p>
 
 ## Features
@@ -74,10 +74,6 @@ ExpandableText(longText)
     .expandAnimation(.easeOut)
     .trimMultipleNewlinesWhenTruncated(true)
 ```
-
-<p align="center">
-  <img src="demo/customization-demo.gif" width="280" alt="Customization Example">
-</p>
 
 ## Available Modifiers
 
