@@ -147,4 +147,18 @@ eu fugiat nulla pariatur.
     )
     .padding()
 }
+
+#Preview("Customization") {
+    ExpandableText(
+        loremIpsum
+    )
+    .font(.body)
+    .foregroundColor(.primary)
+    .lineLimit(3)
+    .moreButtonText("Show more")
+    .moreButtonFont(.caption.bold())
+    .moreButtonColor(.blue)
+    .expandAnimation(.easeOut)
+    .padding()
+}
 #endif
