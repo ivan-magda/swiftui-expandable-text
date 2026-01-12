@@ -34,6 +34,10 @@ jobs:
             --hosting-base-path swiftui-expandable-text \
             --output-path ./docs
 
+      - name: Add redirect to root
+        run: |
+          echo '<html><head><meta http-equiv="refresh" content="0; url=documentation/expandabletext/"></head></html>' > ./docs/index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
