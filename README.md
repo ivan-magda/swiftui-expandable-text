@@ -8,7 +8,7 @@
 
 Drop-in SwiftUI text that expands on tap. Markdown, animations, RTL—handled.
 
-<p align="center">
+<p align="leading">
   <img src="demo/expandable-text-demo.gif" width="240" alt="ExpandableText Demo">&nbsp;&nbsp;<img src="demo/markdown-demo.gif" width="240" alt="Markdown Demo">&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="240" alt="Customization Demo">
 </p>
 
