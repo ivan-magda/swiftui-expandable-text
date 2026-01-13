@@ -144,6 +144,10 @@ struct BlogPostView: View {
 }
 ```
 
+## Documentation
+
+Full API documentation available at [Swift Package Index](https://swiftpackageindex.com/ivan-magda/swiftui-expandable-text/main/documentation/expandabletext).
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
