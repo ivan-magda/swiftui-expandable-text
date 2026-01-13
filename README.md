@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com/swift)
 
-SwiftUI expandable text with markdown support. Renders bold, italic, strikethrough, code, and links - then truncates gracefully with animated "Show More". Auto-detects truncation, RTL-aware, works on iOS/macOS/tvOS/watchOS.
+Drop-in SwiftUI text that expands on tap. Markdown, animations, RTL—handled.
 
 <p align="center">
   <img src="demo/expandable-text-demo.gif" width="240" alt="ExpandableText Demo">&nbsp;&nbsp;<img src="demo/markdown-demo.gif" width="240" alt="Markdown Demo">&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="240" alt="Customization Demo">
