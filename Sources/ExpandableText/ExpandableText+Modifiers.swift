@@ -169,7 +169,7 @@ extension ExpandableText {
   ///
   /// - Parameter animation: The animation to use for the expansion.
   /// - Returns: An expandable text view with the specified animation.
-  /// - Note: The default animation is `.default`.
+  /// - Note: The default animation is `.spring`.
   public func expandAnimation(_ animation: Animation) -> Self {
     var copy = self
     copy.expandAnimation = animation
