@@ -29,17 +29,17 @@ private struct TruncationTextMask: ViewModifier {
                                 .frame(width: size.width, height: size.height)
 
                                 Rectangle()
-                                    .foregroundColor(.clear)
+                                    .foregroundStyle(.clear)
                                     .frame(width: size.width)
                             }
                         }
                         .frame(height: size.height)
+                    } else {
+                        Rectangle()
+                            .frame(height: size.height)
                     }
-                )
-        } else {
-            content
-                .fixedSize(horizontal: false, vertical: true)
-        }
+                }
+            )
     }
 }
 

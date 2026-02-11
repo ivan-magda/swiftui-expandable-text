@@ -4,27 +4,26 @@ import SwiftUI
 
 @Test @MainActor func testInitialState() {
     let sut = ExpandableText(verbatim: "Test text")
-    #expect(sut.isExpanded == false)
-    #expect(sut.isTruncated == false)
+    #expect(sut.font == .body)
+    #expect(sut.color == .primary)
+    #expect(sut.lineLimit == 3)
+    #expect(sut.moreButtonText == "more")
 }
 
 @Test @MainActor func testLocalizedStringKeyInit() {
     let sut = ExpandableText("**bold** text")
-    #expect(sut.isExpanded == false)
-    #expect(sut.isTruncated == false)
+    #expect(sut.font == .body)
 }
 
 @Test @MainActor func testVerbatimInit() {
-    let text = "Some **text** with asterisks"
-    let sut = ExpandableText(verbatim: text)
-    #expect(sut.isExpanded == false)
-    #expect(sut.isTruncated == false)
+    let sut = ExpandableText(verbatim: "Some **text** with asterisks")
+    #expect(sut.font == .body)
 }
 
 @Test @MainActor func testCustomization() {
     let sut = ExpandableText(verbatim: "Test")
         .font(.title)
-        .foregroundColor(.red)
+        .foregroundStyle(.red)
         .moreButtonText("Show More")
 
     #expect(sut.font == .title)

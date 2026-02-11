@@ -131,28 +131,34 @@ public struct ExpandableText: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .hidden()
                     .readSize { size in
-                        intrinsicSize = size
-                        isTruncated = truncatedSize != intrinsicSize
+                        if intrinsicSize != size {
+                            intrinsicSize = size
+                        }
                     }
             )
             .background(
                 Text(moreButtonText)
                     .font(moreButtonFont ?? font)
                     .hidden()
-                    .readSize { moreTextSize = $0 }
+                    .readSize { size in
+                        if moreTextSize != size {
+                            moreTextSize = size
+                        }
+                    }
             )
-            .allowsHitTesting(false)
+            .allowsHitTesting(!shouldShowMoreButton)
             .overlay(alignment: .trailingLastTextBaseline) {
                 if shouldShowMoreButton {
                     moreButton
+                        .transition(.opacity)
                 }
             }
     }
 
     private var content: some View {
-        makeText()
+        textContent.text
             .font(font)
-            .foregroundColor(color)
+            .foregroundStyle(color)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
@@ -218,7 +224,7 @@ eu fugiat nulla pariatur.
 #Preview("Customization") {
     ExpandableText(verbatim: loremIpsum)
         .font(.body)
-        .foregroundColor(.primary)
+        .foregroundStyle(.primary)
         .lineLimit(3)
         .moreButtonText("Show more")
         .moreButtonFont(.caption.bold())

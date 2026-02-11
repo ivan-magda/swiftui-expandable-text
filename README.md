@@ -82,7 +82,7 @@ ExpandableText(verbatim: text)
 ```swift
 ExpandableText(longText)
     .font(.body)
-    .foregroundColor(.primary)
+    .foregroundStyle(.primary)
     .lineLimit(3)
     .moreButtonText("Show more")
     .moreButtonFont(.caption.bold())
@@ -95,12 +95,12 @@ ExpandableText(longText)
 | Modifier | Description | Default |
 |----------|-------------|---------|
 | `font(_:)` | Sets the font for the text | `.body` |
-| `foregroundColor(_:)` | Sets the text color | `.primary` |
+| `foregroundStyle(_:)` | Sets the text color | `.primary` |
 | `lineLimit(_:)` | Sets maximum number of lines when collapsed | `3` |
 | `moreButtonText(_:)` | Text for the "show more" button | `"more"` |
 | `moreButtonFont(_:)` | Font for the "show more" button | Same as text font |
 | `moreButtonForegroundStyle(_:)` | Shape style for the "show more" button | `.accentColor` |
-| `expandAnimation(_:)` | Animation used when expanding/collapsing | `.default` |
+| `expandAnimation(_:)` | Animation used when expanding/collapsing | `.spring` |
 
 ## How It Works
 
@@ -130,7 +130,7 @@ struct BlogPostView: View {
 
             ExpandableText(verbatim: post.content)
                 .font(.body)
-                .foregroundColor(.primary)
+                .foregroundStyle(.primary)
                 .lineLimit(4)
                 .moreButtonText("Read more")
                 .moreButtonFont(.caption.bold())

@@ -28,19 +28,24 @@ extension ExpandableText {
   ///
   /// ```swift
   /// ExpandableText("Important notice...")
-  ///     .foregroundColor(.red)
+  ///     .foregroundStyle(.red)
   ///
   /// ExpandableText("Secondary content...")
-  ///     .foregroundColor(.secondary)
+  ///     .foregroundStyle(.secondary)
   /// ```
   ///
   /// - Parameter color: The color to apply to the text.
   /// - Returns: An expandable text view with the specified color.
   /// - Note: The default color is `.primary`.
-  public func foregroundColor(_ color: Color) -> Self {
+  public func foregroundStyle(_ color: Color) -> Self {
     var copy = self
     copy.color = color
     return copy
+  }
+
+  @available(*, deprecated, renamed: "foregroundStyle(_:)")
+  public func foregroundColor(_ color: Color) -> Self {
+    foregroundStyle(color)
   }
 
   /// Sets the maximum number of lines when the text is collapsed.
