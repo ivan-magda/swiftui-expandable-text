@@ -10,9 +10,6 @@ import SwiftUI
 /// Use `ExpandableText` when you need to display potentially long text content in a
 /// compact space, such as article previews, comments, or product descriptions.
 ///
-/// The view exposes read-only `isExpanded` and `isTruncated` state properties
-/// that you can observe to react to state changes.
-///
 /// ```swift
 /// struct ArticlePreview: View {
 ///     let article: Article

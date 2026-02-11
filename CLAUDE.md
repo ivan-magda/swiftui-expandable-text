@@ -22,11 +22,10 @@ This is a Swift Package Manager library providing a single SwiftUI component: `E
 - **`ExpandableText+Modifiers.swift`** - Value-semantic modifiers (copy-mutate-return pattern) for customization.
 - **`TruncationTextMask.swift`** - Gradient mask that creates the fade effect before the "more" button. Handles RTL layout.
 - **`ViewSizeReader.swift`** - `PreferenceKey`-based helper for measuring view sizes.
-- **`View+Overlay.swift`** - iOS 14/15 compatibility wrapper for overlay alignment.
 
 ### Truncation Detection Pattern
 
-The view renders text twice: once visible (with line limit) and once hidden (unconstrained). By comparing their sizes via `readSize`, it determines if truncation occurred. This drives the `isTruncated` state that controls the "more" button visibility.
+The view renders text twice: once visible (with line limit) and once hidden (unconstrained). By comparing their sizes via `readSize`, it determines if truncation occurred. This drives the `isTruncated` computed property that controls the "more" button visibility.
 
 ### Modifier Pattern
 
