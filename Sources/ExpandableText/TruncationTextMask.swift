@@ -8,11 +8,12 @@ private struct TruncationTextMask: ViewModifier {
     @Environment(\.layoutDirection) private var layoutDirection
 
     func body(content: Content) -> some View {
-        if isEnabled {
-            content
-                .mask(
-                    VStack(spacing: 0) {
-                        Rectangle()
+        content
+            .fixedSize(horizontal: false, vertical: !isEnabled)
+            .mask(
+                VStack(spacing: 0) {
+                    Rectangle()
+                    if isEnabled {
                         HStack(spacing: 0) {
                             Rectangle()
                             HStack(spacing: 0) {
