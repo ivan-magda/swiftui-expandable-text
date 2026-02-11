@@ -32,35 +32,36 @@ import SwiftUI
 /// }
 /// ```
 public struct ExpandableText: View {
-    /// A Boolean value indicating whether the text is currently expanded.
-    ///
-    /// This property is `true` when the user has tapped the "more" button to
-    /// reveal the full text content, and `false` when the text is collapsed.
-    ///
-    /// - Note: This is a read-only state managed internally by the view.
-    @State private(set) var isExpanded: Bool = false
-
-    /// A Boolean value indicating whether the text content exceeds the line limit.
-    ///
-    /// This property is `true` when the full text content requires more lines
-    /// than specified by ``lineLimit(_:)``, causing truncation. The "more" button
-    /// only appears when this value is `true`.
-    ///
-    /// - Note: This is a read-only state managed internally by the view.
-    @State private(set) var isTruncated: Bool = false
-
+    @State private var isExpanded: Bool = false
     @State private var intrinsicSize: CGSize = .zero
     @State private var truncatedSize: CGSize = .zero
     @State private var moreTextSize: CGSize = .zero
 
-    private let makeText: () -> Text
+    private var isTruncated: Bool {
+        intrinsicSize != .zero && truncatedSize != intrinsicSize
+    }
+
+    private enum TextContent: Equatable {
+        case localized(LocalizedStringKey)
+        case verbatim(String)
+
+        var text: Text {
+            switch self {
+            case .localized(let key): Text(key)
+            case .verbatim(let string): Text(verbatim: string)
+            }
+        }
+    }
+
+    private let textContent: TextContent
+
     internal var font: Font = .body
     internal var color: Color = .primary
     internal var lineLimit: Int = 3
     internal var moreButtonText: String = "more"
     internal var moreButtonFont: Font?
     internal var moreButtonForegroundStyle: AnyShapeStyle = AnyShapeStyle(Color.accentColor)
-    internal var expandAnimation: Animation = .default
+    internal var expandAnimation: Animation = .spring
 
     private var shouldShowMoreButton: Bool { !isExpanded && isTruncated }
 
@@ -88,7 +89,7 @@ public struct ExpandableText: View {
     /// - Note: When using string variables instead of literals, use ``init(verbatim:)``
     ///   to avoid unexpected markdown parsing.
     public init(_ key: LocalizedStringKey) {
-        self.makeText = { Text(key) }
+        self.textContent = .localized(key)
     }
 
     /// Creates expandable text with a raw string without markdown parsing.
@@ -114,7 +115,7 @@ public struct ExpandableText: View {
     /// - Note: Use ``init(_:)`` instead if you want markdown formatting to be rendered.
     public init(verbatim content: String) {
         let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
-        self.makeText = { Text(verbatim: trimmed) }
+        self.textContent = .verbatim(trimmed)
     }
 
     public var body: some View {
@@ -122,8 +123,9 @@ public struct ExpandableText: View {
             .lineLimit(isExpanded ? nil : lineLimit)
             .applyingTruncationMask(size: moreTextSize, isEnabled: shouldShowMoreButton)
             .readSize { size in
-                truncatedSize = size
-                isTruncated = truncatedSize != intrinsicSize
+                if truncatedSize != size {
+                    truncatedSize = size
+                }
             }
             .background(
                 content
