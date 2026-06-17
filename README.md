@@ -1,54 +1,75 @@
 # ExpandableText
 
-[![Swift](https://github.com/ivan-magda/swiftui-expandable-text/actions/workflows/swift.yml/badge.svg)](https://github.com/username/swiftui-expandable-text/actions/workflows/swift.yml)
+SwiftUI text that renders markdown, truncates to a line limit, and expands on tap with an animated "more" button.
+
+[![Swift](https://github.com/ivan-magda/swiftui-expandable-text/actions/workflows/swift.yml/badge.svg)](https://github.com/ivan-magda/swiftui-expandable-text/actions/workflows/swift.yml)
 [![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-brightgreen.svg)](https://swift.org/package-manager/)
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-iOS%20|%20macOS%20|%20tvOS%20|%20watchOS-lightgrey.svg)](https://developer.apple.com/swift)
 
-Drop-in SwiftUI text that expands on tap. Markdown, animations, RTL-handled.
-
 <p align="leading">
   <img src="demo/expandable-text-demo.gif" width="240" alt="ExpandableText Demo">&nbsp;&nbsp;<img src="demo/markdown-demo.gif" width="240" alt="Markdown Demo">&nbsp;&nbsp;<img src="demo/customization-demo.gif" width="240" alt="Customization Demo">
 </p>
 
+## Table of Contents
+
+- [Background](#background)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Available Modifiers](#available-modifiers)
+- [How It Works](#how-it-works)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Background
+
+Long text in a compact layout, such as an article preview, a comment, or a product description, often needs to collapse to a few lines with a way to reveal the rest. `ExpandableText` handles this in a single view: it measures the full text against the truncated version, shows a "more" button only when the content overflows, and reveals the rest with an animation on tap. It renders markdown in string literals and keeps the truncation fade on the correct edge in right-to-left layouts.
+
 ## Features
 
-- Markdown rendering support (**bold**, *italic*, ~~strikethrough~~, `code`, [links](url))
-- Expand text with customizable animation
-- Automatically detects text truncation
-- Customizable "more" button text, style, and font
-- Supports various text styling options
-- Works across iOS, macOS, tvOS, and watchOS
-- Smooth gradient truncation effect
-- RTL language support
-
-## Requirements
-
-- iOS 15.0+ / macOS 12.0+ / tvOS 15.0+ / watchOS 8.0+
-- Swift 6.0+
-- Xcode 16.2+
+- Renders markdown in string literals: **bold**, *italic*, ~~strikethrough~~, `code`, and [links](url)
+- Detects truncation automatically by measuring intrinsic against truncated size
+- Shows the "more" button only when the text overflows the line limit
+- Animates expansion with a configurable animation
+- Fades the truncated edge with a gradient mask that is RTL-aware
+- Customizes the button text, font, and foreground style
+- Runs on iOS, macOS, tvOS, and watchOS
 
 ## Installation
 
-### Swift Package Manager
+### Xcode
 
-Add the following to your `Package.swift` file:
+1. Open **File** > **Add Package Dependencies...**
+2. Enter the repository URL: `https://github.com/ivan-magda/swiftui-expandable-text.git`
+3. Select the version rule and add the `ExpandableText` library to your target.
+
+### Package.swift
+
+Add the package to your `dependencies`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ivan-magda/swiftui-expandable-text.git", from: "2.0.0")
+    .package(url: "https://github.com/ivan-magda/swiftui-expandable-text.git", from: "2.1.0")
 ]
 ```
 
-Or add it directly through Xcode:
-1. Go to **File** > **Add Package Dependencies...**
-2. Enter the repository URL: `https://github.com/ivan-magda/swiftui-expandable-text.git`
-3. Follow the prompts to complete the installation
+Then add the product to your target:
+
+```swift
+.target(
+    name: "YourTarget",
+    dependencies: [
+        .product(name: "ExpandableText", package: "swiftui-expandable-text")
+    ]
+)
+```
 
 ## Usage
 
-### Basic Usage
+### Basic
 
 ```swift
 import SwiftUI
@@ -62,25 +83,25 @@ struct ContentView: View {
 }
 ```
 
-### Markdown Support
+### Markdown
 
-String literals automatically render markdown:
+A string literal is treated as a `LocalizedStringKey`, so markdown is rendered:
 
 ```swift
 ExpandableText("This is **bold**, *italic*, and ~~strikethrough~~ text. Visit [Apple](https://apple.com) for more.")
 ```
 
-For string variables or to disable markdown parsing, use `verbatim:`:
+For a `String` variable, or to display text without markdown parsing, use `verbatim:`. Leading and trailing whitespace is trimmed:
 
 ```swift
-let text = fetchedContent // String variable
-ExpandableText(verbatim: text)
+let content = fetchUserComment()
+ExpandableText(verbatim: content)
 ```
 
 ### Customization
 
 ```swift
-ExpandableText(longText)
+ExpandableText(verbatim: longText)
     .font(.body)
     .foregroundStyle(.primary)
     .lineLimit(3)
@@ -90,83 +111,58 @@ ExpandableText(longText)
     .expandAnimation(.easeOut)
 ```
 
+The `moreButtonForegroundStyle` modifier accepts any `ShapeStyle`, so gradients work too:
+
+```swift
+ExpandableText(verbatim: longText)
+    .moreButtonForegroundStyle(
+        .linearGradient(
+            colors: [.purple, .pink],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
+    )
+```
+
 ## Available Modifiers
 
 | Modifier | Description | Default |
 |----------|-------------|---------|
-| `font(_:)` | Sets the font for the text | `.body` |
-| `foregroundStyle(_:)` | Sets the text color | `.primary` |
-| `lineLimit(_:)` | Sets maximum number of lines when collapsed | `3` |
-| `moreButtonText(_:)` | Text for the "show more" button | `"more"` |
-| `moreButtonFont(_:)` | Font for the "show more" button | Same as text font |
-| `moreButtonForegroundStyle(_:)` | Shape style for the "show more" button | `.accentColor` |
-| `expandAnimation(_:)` | Animation used when expanding/collapsing | `.spring` |
+| `font(_:)` | Font for the text content | `.body` |
+| `foregroundStyle(_:)` | Color of the text | `.primary` |
+| `lineLimit(_:)` | Maximum lines shown when collapsed | `3` |
+| `moreButtonText(_:)` | Text on the expand button | `"more"` |
+| `moreButtonFont(_:)` | Font for the button | Inherits `font(_:)` |
+| `moreButtonForegroundStyle(_:)` | `ShapeStyle` for the button | `.accentColor` |
+| `expandAnimation(_:)` | Animation used when expanding | `.spring` |
+
+> `foregroundColor(_:)` remains available but is deprecated in favor of `foregroundStyle(_:)`.
 
 ## How It Works
 
-The `ExpandableText` component works by:
+The view renders the text twice: once visible with the line limit applied, and once hidden and unconstrained. It reads both sizes through a `PreferenceKey` and compares them; when they differ, the text is truncated. That drives the `isTruncated` state, which gates a gradient mask over the trailing edge and the "more" button overlay. Tapping the button toggles the expanded state inside the configured animation. The gradient mask reads the layout direction, so the fade falls on the correct edge in RTL.
 
-1. Measuring both the truncated and full-size text
-2. Detecting if truncation is necessary
-3. Applying a gradient mask to create a smooth fade effect
-4. Adding a "show more" button when text is truncated
-5. Expanding/collapsing with animation when the button is tapped
+## Project Structure
 
-## Advanced Example
-
-```swift
-struct BlogPostView: View {
-    let post: BlogPost
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(post.title)
-                .font(.title)
-                .bold()
-
-            Text("Posted by \(post.author) • \(post.dateFormatted)")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            ExpandableText(verbatim: post.content)
-                .font(.body)
-                .foregroundStyle(.primary)
-                .lineLimit(4)
-                .moreButtonText("Read more")
-                .moreButtonFont(.caption.bold())
-                .moreButtonForegroundStyle(.blue)
-                .padding(.vertical, 4)
-
-            Divider()
-        }
-        .padding()
-    }
-}
 ```
-
-## Documentation
-
-Full API documentation available at [Swift Package Index](https://swiftpackageindex.com/ivan-magda/swiftui-expandable-text/main/documentation/expandabletext).
+Sources/ExpandableText/
+├── ExpandableText.swift            # Main view, initializers, truncation state
+├── ExpandableText+Modifiers.swift  # Value-semantic customization modifiers
+├── TruncationTextMask.swift        # RTL-aware gradient fade mask
+└── ViewSizeReader.swift            # PreferenceKey-based size measurement
+```
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Issues and pull requests are welcome. To build and test locally:
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```bash
+swift build
+swift test
+```
+
+SwiftLint runs in CI with `--strict`; the configuration is in `.swiftlint.yml`.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-Ivan Magda - [@ivanmagda](https://github.com/ivanmagda)
-
-## Acknowledgments
-
-- Inspired by the need for a more customizable text expansion solution in SwiftUI
-- Thanks to the SwiftUI community for support and feedback
+ExpandableText is released under the MIT License. See [LICENSE](LICENSE) for details.
